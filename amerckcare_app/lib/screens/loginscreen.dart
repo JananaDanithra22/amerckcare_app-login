@@ -26,18 +26,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
     await auth.login(_usernameCtrl.text.trim(), _passwordCtrl.text);
     if (auth.isAuthenticated) {
-      // Redirect to protected home page
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     }
-    // if auth.errorMessage is set, UI will update via provider listener
+  }
+
+  void _loginWithSSO() async {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    await auth.loginWithSSO();
+    if (auth.isAuthenticated) {
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/home');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
 
-    // if already logged in (rare), redirect
+    // if already logged in, redirect
     if (auth.isAuthenticated) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacementNamed(context, '/home');
@@ -91,11 +98,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         labelText: 'Password',
                         prefixIcon: Icon(Icons.lock),
                       ),
-                      validator:
-                          (v) =>
-                              (v == null || v.isEmpty)
-                                  ? 'Please enter password'
-                                  : null,
+                      validator: (v) =>
+                          (v == null || v.isEmpty) ? 'Please enter password' : null,
                     ),
                     const SizedBox(height: 16),
                     if (auth.errorMessage != null)
@@ -110,19 +114,29 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: auth.isLoading ? null : _submit,
-                        child:
-                            auth.isLoading
-                                ? const SizedBox(
-                                  height: 18,
-                                  width: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                                : const Text('Login'),
+                        child: auth.isLoading
+                            ? const SizedBox(
+                                height: 18,
+                                width: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('Login'),
                       ),
                     ),
+                    const SizedBox(height: 12),
+                    // ---- SSO Button ----
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.login),
+                        label: const Text('Sign in with Company SSO'),
+                        onPressed: auth.isLoading ? null : _loginWithSSO,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     TextButton(
                       onPressed: () {
                         // Placeholder: forgot password flow
