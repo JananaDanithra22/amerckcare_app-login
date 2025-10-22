@@ -229,60 +229,63 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-// SSO Login Button
-SizedBox(
-  width: buttonWidth,
-  height: buttonHeight,
-  child: ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: ssoColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
-    ),
-    onPressed: auth.isLoading
-        ? null
-        : () async {
-            // Create AuthService with your real Okta domain and client info
-            final authService = AuthService(
-              issuer: 'https://trial-1216043.okta.com/oauth2/default',
-              clientId: '0oawnrm4xbfj0DSri697',
-              redirectUrl: 'com.amerckcare.app:/callback',
-            );
+                    // SSO Login Button
+                    SizedBox(
+                      width: buttonWidth,
+                      height: buttonHeight,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ssoColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(borderRadius),
+                          ),
+                        ),
+                        onPressed:
+                            auth.isLoading
+                                ? null
+                                : () async {
+                                  final authService = AuthService();
+                                  try {
+                                    await authService.signIn();
 
-            try {
-              // Start the SSO sign-in flow
-              await authService.signIn();
+                                    final token =
+                                        await authService.readAccessToken();
+                                    if (token != null) {
+                                      if (!mounted) return;
+                                      Navigator.pushReplacementNamed(
+                                        context,
+                                        '/home',
+                                      );
+                                    } else {
+                                      if (!mounted) return;
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('SSO login failed'),
+                                        ),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    if (!mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('SSO login error: $e'),
+                                      ),
+                                    );
+                                  }
+                                },
 
-              // Read the access token from secure storage
-              final token = await authService.readAccessToken();
-
-              if (token != null) {
-                if (!mounted) return;
-                Navigator.pushReplacementNamed(context, '/home');
-              } else {
-                if (!mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('SSO login failed')),
-                );
-              }
-            } catch (e) {
-              if (!mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('SSO login error: $e')),
-              );
-            }
-          },
-    child: const Text(
-      'Sign in with SSO',
-      style: TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-        fontSize: 20,
-      ),
-    ),
-  ),
-),
+                        child: const Text(
+                          'Sign in with SSO',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
 
                     const SizedBox(height: 16),
                     // Forgot Password

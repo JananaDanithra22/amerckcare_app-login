@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.amerckcare_app">
 
+    <!-- Add this line to enable network access -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name="${applicationName}"
         android:label="amerckcare_app"
