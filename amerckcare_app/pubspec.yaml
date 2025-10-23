@@ -13,10 +13,6 @@ dependencies:
   provider: ^6.1.5
   cupertino_icons: ^1.0.8
 
-  # Firebase dependencies
-  firebase_core: ^2.25.0
-  firebase_auth: ^4.9.0
-  google_sign_in: ^6.2.0
 
 dev_dependencies:
   flutter_test:
@@ -25,6 +21,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  assets:
-    - lib/images/amerckcarelogo.png
