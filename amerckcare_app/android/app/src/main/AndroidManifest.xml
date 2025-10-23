@@ -1,7 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.amerckcare_app">
 
-    <!-- Add this line to enable network access -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -18,7 +17,6 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
 
-            <!-- Flutter normal theme -->
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
@@ -29,36 +27,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <!-- Callback for SSO -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="com.amerckcare.app" android:host="callback"/>
-            </intent-filter>
-
-            <!-- Logout redirect (optional) -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="com.amerckcare.app" android:host="logout"/>
-            </intent-filter>
-
         </activity>
 
-        <!-- Required by Flutter plugins -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
 
     </application>
 
-    <!-- Required for PROCESS_TEXT queries used by Flutter plugins -->
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT"/>
-            <data android:mimeType="text/plain"/>
-        </intent>
-    </queries>
 </manifest>

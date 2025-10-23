@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'providers/authprovider.dart';
 import 'screens/loginscreen.dart';
 import 'screens/homescreen.dart';
-import 'screens/splashscreen.dart'; // ✅ Import splash screen
+import 'screens/splashscreen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     ChangeNotifierProvider(create: (_) => AuthProvider(), child: const MyApp()),
   );
